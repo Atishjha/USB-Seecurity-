@@ -1,0 +1,100 @@
+Future Update that i want to integrate 
+1. HARDEN THE CORE SYSTEM
+ Add Kernel-Level USB Event Monitoring
+
+Your current system relies on WinAPI / WMI / polling.
+Improve by using:
+
+Windows Driver Framework (KMDF/UMDF)
+
+Write a minimal UMDF driver to intercept USB mount events more reliably
+
+This also prevents spoofed events and bypasses
+
+ Enforce Real Read-Only Mounts
+
+Right now, you simulate read-only by blocking operations.
+Better:
+
+Use Windows Diskpart / VDS_* APIs / IOCTL_DISK_SET_READONLY
+
+Apply read-only before the drive is assigned a letter
+
+Block autoruns and shortcut-based malware instantly
+
+Process Isolation (Sandbox Scanning Worker)
+
+Run:
+
+USB watcher
+
+Scanner engine
+
+Policy executor
+
+UI dashboard
+
+as separate processes, with the scanning engine running:
+
+In low-integrity mode
+
+Possibly inside Windows Sandbox (optional)
+
+2. ADVANCED SECURITY FEATURES
+ Multi-Engine Scanning
+
+Add support for:
+
+ClamAV (already present)
+
+Windows Defender MpCmdRun
+
+VirusTotal API (hash-based first, file-based only if needed)
+
+Multi-engine scanning drastically improves detection of zero-days.
+
+ Real-Time Heuristic Monitoring
+
+Your heuristic engine can be expanded:
+
+Behavior-based rules
+
+Unexpected creation of .lnk files
+
+Scripts dropped to root
+
+Mass attribute changes (hidden/system)
+
+PowerShell execution triggered by drive insertion
+
+Suspicious entropy spikes (possible packed malware)
+
+ML-based anomaly detection (optional)
+
+Train on “normal USB structure” vs “abnormal”
+
+Detect ransomware droppers or obfuscated payloads by patterns
+
+Trusted Device Fingerprinting
+
+Fingerprint every USB device using:
+
+VID/PID
+
+Serial number
+
+Storage size
+
+File system
+
+Volume label
+
+First-seen timestamp
+
+Then categorize as:
+
+Trusted
+
+Restricted
+
+Never trust (ban list)
